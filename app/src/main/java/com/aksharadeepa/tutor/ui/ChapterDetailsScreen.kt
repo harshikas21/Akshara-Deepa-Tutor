@@ -3,7 +3,6 @@ package com.aksharadeepa.tutor.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -63,7 +62,7 @@ val chapterConcepts = mapOf(
     42 to listOf("Union and states", "Concurrent powers", "Constitutional framework", "Amendment process", "Federal structure"),
     43 to listOf("Democracy principles", "Representation", "Participation", "Diversity management", "Inclusive practices"),
     44 to listOf("Caste system", "Gender roles", "Religious diversity", "Minority rights", "Social equality"),
-    45 to listOf("Political parties", "Electoral system", "Voting process", "Party functions", "Democratic participation")
+    45 to listOf("Political parties", "Electoral system", "Voting process", "Party functions", "Democratic participation"),
 )
 
 @Composable

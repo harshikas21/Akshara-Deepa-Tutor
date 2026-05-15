@@ -30,21 +30,19 @@ import java.io.FileOutputStream
 // Theme colors used in the app
 private val BgDark = Color(0xFFF0F4EF)
 private val SurfaceDark = Color.White
-private val TextPrimary = Color(0xFF1A2517)
 private val TextSecond = Color(0xFF6B7A69)
 private val DeepBlue = Color(0xFF1A2517)
-private val WarnRed = Color(0xFFB00020)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PdfViewerScreen(
     navController: NavController,
     pdfFileName: String,
-    title: String
+    title: String,
 ) {
     val context = LocalContext.current
     var pages by remember { mutableStateOf<List<Bitmap>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(value = true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(pdfFileName) {
@@ -61,7 +59,7 @@ fun PdfViewerScreen(
                             input.copyTo(output)
                         }
                     }
-                } catch (e: java.io.FileNotFoundException) {
+                } catch (_: java.io.FileNotFoundException) {
                     errorMessage = "Study notes for this chapter are not available yet. Please check back later!"
                     isLoading = false
                     return@withContext
@@ -72,13 +70,13 @@ fun PdfViewerScreen(
                     val pdfRenderer = PdfRenderer(pfd)
                     val bitmapList = mutableListOf<Bitmap>()
 
-                    try {
-                        for (i in 0 until pdfRenderer.pageCount) {
-                            pdfRenderer.openPage(i).use { page ->
+                    pdfRenderer.use { renderer ->
+                        for (i in 0 until renderer.pageCount) {
+                            renderer.openPage(i).use { page ->
                                 val bitmap = Bitmap.createBitmap(
                                     page.width * 2,
                                     page.height * 2,
-                                    Bitmap.Config.ARGB_8888
+                                    Bitmap.Config.ARGB_8888,
                                 )
                                 // Fill with white background before rendering
                                 val canvas = Canvas(bitmap)
@@ -88,11 +86,9 @@ fun PdfViewerScreen(
                                 bitmapList.add(bitmap)
                             }
                         }
-                        pages = bitmapList
-                        isLoading = false
-                    } finally {
-                        pdfRenderer.close()
                     }
+                    pages = bitmapList
+                    isLoading = false
                 }
             } catch (e: Exception) {
                 errorMessage = "Something went wrong while opening the PDF: ${e.localizedMessage}"
